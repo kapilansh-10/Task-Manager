@@ -1,11 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { AddTodoForm } from './components/AddTodoForm'
 import { TodoList } from './components/TodoList.jsx'
 
+const getInitialTodos = () => {
+  const savedTodos = localStorage.getItem('todos');
+  return savedTodos ? JSON.parse(savedTodos) : [];
+}
+
 function App() {
 
-  const [todos, setTodos] = useState([])
+  const [todos, setTodos] = useState(getInitialTodos)
 
   //addTodo logic
   const addTodo = (value) => {
@@ -30,6 +35,18 @@ function App() {
       ))
     )
   }
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('todos');
+    if(storedTodos) {
+      const Todos = JSON.parse(storedTodos);
+      setTodos(Todos)
+    }
+  },[])
+
+  useEffect(() => {
+    localStorage.setItem('todos',JSON.stringify(todos));
+  },[todos])
 
   return (
     <>
